@@ -1,0 +1,97 @@
+/* main.css */
+
+/* Reset básico e definição de font */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Contêiner principal da aplicação */
+  .App {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+  }
+  
+  /* Seções principais */
+  section {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  section h2 {
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    color: #34495e;
+  }
+  
+  section p {
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+  
+  /* Componentes específicos */
+  /* Ajustes para o componente de QR Code */
+  .QRCode {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  /* Estilos para exibição do saldo */
+  .TokenBalance {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #27ae60;
+  }
+  
+  /* Histórico de transações */
+  .TransactionHistory {
+    font-size: 0.95rem;
+    color: #555;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #777;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeaea;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .App {
+      padding: 10px;
+    }
+    header h1 {
+      font-size: 2rem;
+    }
+    section {
+      padding: 15px;
+    }
+  }
+  

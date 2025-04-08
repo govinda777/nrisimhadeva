@@ -1,10 +1,5 @@
 # nrisimhadeva
 
-# Protocolo NRISIMHADEVA
-
-[License: MIT
-[Contributions welcome
-
 O Protocolo NRISIMHADEVA é uma solução descentralizada open-source que conecta o sistema financeiro tradicional (PIX) ao mundo blockchain, permitindo a conversão bidirecional entre moeda fiduciária (BRL) e tokens digitais sem necessidade de banco de dados centralizado.
 
 ## Índice
@@ -39,6 +34,67 @@ O protocolo opera com uma arquitetura totalmente descentralizada:
 - **Oráculos Descentralizados**: Monitoram pagamentos PIX e acionam os smart contracts.
 - **Autenticação Descentralizada**: Integração com Auth0 para gerenciamento de identidade.
 - **Armazenamento On-Chain**: Todas as informações relevantes são armazenadas na blockchain.
+
+```
+nrisimhadeva/
+├── README.md                     // Documentação geral do projeto
+├── package.json                  // Dependências e scripts gerais
+├── .env.example                  // Exemplo de variáveis de ambiente
+├── .gitignore                    // Arquivos e pastas ignorados pelo Git
+├── LICENSE                       // Licença do projeto (ex.: MIT)
+├── CONTRIBUTING.md               // Guia de contribuição para desenvolvedores
+└── src/
+    ├── frontend/                 // Camada de apresentação (React)
+    │   ├── package.json          // Dependências do frontend
+    │   ├── public/
+    │   │   ├── index.html        // Página HTML principal
+    │   │   └── favicon.ico
+    │   ├── index.js              // Ponto de entrada do React
+    │   ├── App.jsx               // Componente raiz do aplicativo
+    │   │   ├── App.feature       // Cenários BDD para o App
+    │   │   └── App.steps.js      // Steps para o App
+    │   ├── pages/                // Páginas da aplicação
+    │   │   ├── Home.jsx
+    │   │   │   ├── Home.feature  // Cenários BDD para a Home
+    │   │   │   └── Home.steps.js // Steps para a Home
+    │   │   ├── Login.jsx
+    │   │   │   ├── Login.feature  // Cenários BDD para a página de login
+    │   │   │   └── Login.steps.js // Steps para a página de login
+    │   │   └── Dashboard.jsx
+    │   │       ├── Dashboard.feature  // Cenários BDD para o Dashboard
+    │   │       └── Dashboard.steps.js // Steps para o Dashboard
+    │   ├── components/           // Componentes reutilizáveis
+    │   │   ├── AuthComponent.jsx         
+    │   │   ├── AuthComponent.feature     
+    │   │   └── AuthComponent.steps.js    
+    │   │   ├── QRCodeComponent.jsx       
+    │   │   ├── QRCodeComponent.feature   
+    │   │   └── QRCodeComponent.steps.js  
+    │   │   ├── TokenBalance.jsx          
+    │   │   ├── TokenBalance.feature      
+    │   │   └── TokenBalance.steps.js     
+    │   │   ├── TransactionHistory.jsx    
+    │   │   ├── TransactionHistory.feature  
+    │   │   └── TransactionHistory.steps.js  
+    │   └── styles/               // Estilos globais e específicos (CSS/SCSS)
+    │       └── main.css          // Estilo principal da aplicação
+    │
+    ├── blockchain/             // Código relacionado aos smart contracts e interações com blockchain
+    │   ├── contracts/
+    │   │   ├── NrisimhadevaToken.sol        // Contrato do token com funções de emissão e resgate
+    │   │   ├── NrisimhadevaToken.feature    // Cenários BDD para o token
+    │   │   ├── NrisimhadevaOracle.sol         // Contrato do oráculo para integração com Chainlink e PIX
+    │   │   └── NrisimhadevaOracle.feature     // Cenários BDD para o oráculo
+    │   ├── migrations/          // Scripts de deploy dos contratos inteligentes
+    │   │   ├── 1_deploy_contracts.js       // Script de deploy dos contratos
+    │   │   ├── 1_deploy_contracts.feature  // Cenários BDD para o deploy dos contratos
+    │   │   └── 1_deploy_contracts.steps.js  // Steps para o deploy dos contratos
+    │   └── scripts/             // Scripts auxiliares e helpers para interações com blockchain
+    │       ├── deploy.js                  // Script para deploy manual dos contratos
+    │       ├── deploy.feature             // Cenários BDD para o deploy manual
+    │       └── deploy.steps.js            // Steps para o deploy manual
+
+```
 
 ## Fluxos de Transação
 
