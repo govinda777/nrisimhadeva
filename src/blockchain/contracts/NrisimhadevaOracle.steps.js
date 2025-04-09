@@ -75,7 +75,7 @@ Then('o evento {string} deve ser emitido com os detalhes corretos',
   async function (eventName) {
     const decimals = await tokenContract.decimals();
     const expectedAmount = ethers.utils.parseUnits(this.amount.toString(), decimals);
-    const filter = oracleContract.filters[eventName](this.recipientAddress, null, 'tx123');
+    const filter = oracleContract.filters[eventName](this.recipientAddress);
     const events = await oracleContract.queryFilter(filter);
     expect(events.length).to.be.greaterThan(0);
     const event = events[0];
@@ -90,13 +90,12 @@ Given('que o endereço {string} possui {int} tokens',
     if (!ethers.utils.isAddress(address)) {
       throw new Error(`Endereço inválido: ${address}`);
     }
-    // If a PIX key was registered, assume resgate scenario and issue tokens to the merchant
-    const recipient = this.pixKey ? merchant.address : address;
-    await tokenContract.connect(owner).issueTokens(
-      recipient,
-      amount,
-      'initial_issue'
-    );
+    let recipient = address;
+    // For redemption scenario, if the provided address equals the oracle's address, issue tokens to the merchant instead
+    if (address.toLowerCase() === oracle.address.toLowerCase()) {
+      recipient = merchant.address;
+    }
+    await tokenContract.connect(owner).issueTokens(recipient, amount, 'initial_issue');
   });
 
 Given('possui uma chave PIX {string} registrada', 
