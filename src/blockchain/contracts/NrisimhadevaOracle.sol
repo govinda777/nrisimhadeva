@@ -121,8 +121,8 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         }
         
         uint8 dec = tokenContract.decimals();
-        uint256 unscaledAmount = _amount / (10 ** uint256(dec));
-        emit PixPaymentProcessed(_sender, -int256(unscaledAmount), _pixKey);
+        uint256 scaledAmount = _amount * (10 ** uint256(dec));
+        emit PixPaymentProcessed(_sender, int256(scaledAmount), _pixKey);
     }
 
     /**
