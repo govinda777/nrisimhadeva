@@ -1,0 +1,17 @@
+{
+    "name": "nrisimhadeva-oracle-jobs",
+    "version": "1.0.0",
+    "description": "Jobs for integrating Oracle for processing PIX payments and redemptions in the NRISIMHADEVA protocol",
+    "main": "src/jobs/job-orchestrator.js",
+    "scripts": {
+      "start": "node src/jobs/job-orchestrator.js"
+    },
+    "dependencies": {
+      "axios": "^0.27.2",
+      "node-schedule": "^2.1.0",
+      "ethers": "^5.7.2",
+      "uuid": "^9.0.0",
+      "cbor": "^8.0.0",
+      "dotenv": "^16.0.0"
+    }
+  }
