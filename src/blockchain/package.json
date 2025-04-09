@@ -7,10 +7,12 @@
     "test": "tests"
   },
   "scripts": {
+    "start-local": "npx hardhat node", 
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
-    "bdd": "npx cucumber-js src/blockchain/contracts/NrisimhadevaToken.feature",
-    "deploy": "npx hardhat run scripts/deploy.js --network <network_name>"
+    "bdd": "npm-run-all --parallel start-local bdd-run",
+    "bdd-run": "npx cucumber-js contracts/NrisimhadevaToken.feature",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +25,8 @@
     "dotenv": "^16.4.7",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.8.0",
-    "hardhat": "^2.22.19"
+    "hardhat": "^2.22.19",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.2.0",

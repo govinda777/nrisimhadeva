@@ -18,6 +18,8 @@ npm install --save-dev dotenv @nomiclabs/hardhat-ethers @nomicfoundation/hardhat
 
 npm install @openzeppelin/contracts --registry https://registry.npmjs.org/
 
+npm install -g npm-run-all --registry https://registry.npmjs.org/
+
 
 rm -rf node_modules package-lock.json
 
