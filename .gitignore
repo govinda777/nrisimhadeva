@@ -1,3 +1,7 @@
+# Hardhat cache and artifacts
+cache/
+artifacts/
+
 node_modules/
 
 # Byte-compiled / optimized / DLL files
