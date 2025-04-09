@@ -13,7 +13,7 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
     
     // Roles de acesso
     bytes32 public constant ORACLE_ROLE = keccak256("ORACLE_ROLE"); // Role para nós oráculos autorizados
-    
+
     // Referência ao contrato do token
     NrisimhadevaToken public tokenContract;
     
@@ -55,7 +55,9 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         _grantRole(ORACLE_ROLE, _oracleAddress);     // Permissão para o oracle
         
         // Configuração inicial da rede Chainlink
-        _setChainlinkToken(_chainlinkToken);
+        if (_chainlinkToken != address(0)) {
+            _setChainlinkToken(_chainlinkToken);
+        }
     }
 
     /**
@@ -92,6 +94,10 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         require(_sender != address(0), "Remetente invalido");
         require(_amount > 0, "Valor invalido");
         require(bytes(_pixKey).length > 0, "Chave PIX invalida");
+        
+        // Verificar saldo do usuário
+        uint256 balance = tokenContract.balanceOf(_sender);
+        require(balance >= _amount, "Saldo insuficiente");
 
         // Construção da requisição para o oracle Chainlink
         Chainlink.Request memory req = _buildChainlinkRequest(
@@ -109,7 +115,9 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         CBORChainlink.encodeString(req.buf, addressToString(_sender));
         
         // Envio da requisição para a rede Chainlink
-        _sendChainlinkRequest(req, fee);
+        if (chainlinkToken != address(0)) {
+            _sendChainlinkRequest(req, fee);
+        }
         
         emit PixPaymentProcessed(_sender, _amount, _pixKey);
     }

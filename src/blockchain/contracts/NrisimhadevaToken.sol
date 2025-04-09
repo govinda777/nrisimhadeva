@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 contract NrisimhadevaToken is ERC20, AccessControl {
     bytes32 public constant ORACLE_ROLE = keccak256("ORACLE_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     
     mapping(address => string) public pixKeys;
     
@@ -16,6 +17,7 @@ contract NrisimhadevaToken is ERC20, AccessControl {
     constructor() ERC20("Nrisimhadeva Token", "NVD") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
         _mint(msg.sender, 1_000_000 * 10 ** decimals());
     }
     
@@ -23,22 +25,24 @@ contract NrisimhadevaToken is ERC20, AccessControl {
         pixKeys[msg.sender] = pixKey;
     }
     
-    function issueTokens(address to, uint256 amount, string calldata transactionId) external onlyRole(ORACLE_ROLE) {
-        uint256 tokens = amount * 10 ** decimals();
-        _mint(to, tokens);
+    function issueTokens(address to, uint256 amount, string calldata transactionId) external onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
         emit TokensIssued(to, amount, transactionId);
     }
     
     function redeemTokens(uint256 amount) external {
-        uint256 tokens = amount * 10 ** decimals();
-        require(balanceOf(msg.sender) >= tokens, "Insufficient balance");
+        require(balanceOf(msg.sender) >= amount, "Saldo insuficiente");
         require(bytes(pixKeys[msg.sender]).length > 0, "No PIX key registered");
         
-        _burn(msg.sender, tokens);
+        _burn(msg.sender, amount);
         emit TokensRedeemed(msg.sender, amount, pixKeys[msg.sender]);
     }
     
     function addOracle(address oracle) external onlyRole(ADMIN_ROLE) {
         grantRole(ORACLE_ROLE, oracle);
+    }
+    
+    function addMinter(address minter) external onlyRole(ADMIN_ROLE) {
+        grantRole(MINTER_ROLE, minter);
     }
 }
