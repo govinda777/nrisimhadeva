@@ -124,7 +124,7 @@ Then('o oráculo deve iniciar uma transferência PIX de R${int} para {string}',
 
 Then('os tokens devem ser queimados', async function () {
   const finalBalance = await tokenContract.balanceOf(merchant.address);
-  expect(finalBalance).to.be.lt(this.initialBalance);
+  expect(finalBalance.lt(this.initialBalance)).to.equal(true);
 });
 
 // Steps para cenários de erro

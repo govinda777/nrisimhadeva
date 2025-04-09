@@ -76,8 +76,9 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         require(bytes(_pixTransactionId).length > 0, "ID transacao invalido");
         
         tokenContract.issueTokens(_recipient, _amount, _pixTransactionId);
-        
-        emit PixPaymentDetected(_recipient, _amount, _pixTransactionId);
+        uint8 dec = tokenContract.decimals();
+        uint256 scaledAmount = _amount * (10 ** uint256(dec));
+        emit PixPaymentDetected(_recipient, scaledAmount, _pixTransactionId);
     }
 
     /**
