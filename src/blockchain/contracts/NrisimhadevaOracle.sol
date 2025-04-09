@@ -32,7 +32,7 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
     
     event PixPaymentProcessed(
         address indexed recipient,
-        uint256 amount,
+        int256 amount,
         string pixKey
     );
 
@@ -120,7 +120,9 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
             _sendChainlinkRequest(req, fee);
         }
         
-        emit PixPaymentProcessed(_sender, _amount, _pixKey);
+        uint8 dec = tokenContract.decimals();
+        uint256 unscaledAmount = _amount / (10 ** uint256(dec));
+        emit PixPaymentProcessed(_sender, -int256(unscaledAmount), _pixKey);
     }
 
     /**

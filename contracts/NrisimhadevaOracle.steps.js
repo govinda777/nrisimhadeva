@@ -1,6 +1,7 @@
 /* --- Appended step definitions for missing cucumber steps --- */
 const { Given, When, Then } = require('@cucumber/cucumber');
 const assert = require('assert');
+const { ethers } = require('ethers');
 
 // Alias mapping to resolve test address aliases to valid Ethereum addresses
 const aliasMapping = {
@@ -70,8 +71,8 @@ Then('o contrato deve emitir {int} tokens para {string}', async function (amount
   const userAddr = resolveAddress(address);
   const balance = await this.tokenContract.balanceOf(userAddr);
   // Convert balance to number for comparison
-  const numericBalance = parseInt(balance.toString(), 10);
-  assert.strictEqual(numericBalance, amount, `Expected balance ${amount} but got ${numericBalance}`);
+  const expectedBalance = ethers.utils.parseUnits(amount.toString(), 18);
+  assert(balance.eq(expectedBalance), `Expected balance ${expectedBalance.toString()} but got ${balance.toString()}`);
 });
 
 Given('que o endereço {string} possui {int} tokens', async function(address, amount) {

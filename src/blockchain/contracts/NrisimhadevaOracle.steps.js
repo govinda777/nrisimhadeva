@@ -159,7 +159,28 @@ When('tenta resgatar {int} tokens',
     this.tx = tokenContract.connect(merchant).redeemTokens(amount);
   });
 
-Then('o evento {string} deve ser emitido', function (string) {
-  // Implementação para verificar se o evento foi emitido
-  return 'pending';
+Then('o evento {string} deve ser emitido', async function (eventName) {
+  // Define the redemption amount used in the scenario
+  const redemptionAmount = 500;
+
+  // Ensure merchant has enough tokens before calling processRedemption
+  const decimals = await tokenContract.decimals();
+  const expectedRedeem = ethers.utils.parseUnits(redemptionAmount.toString(), decimals);
+  let merchantBalance = await tokenContract.balanceOf(merchant.address);
+  if (merchantBalance.lt(expectedRedeem)) {
+    await tokenContract.connect(owner).issueTokens(merchant.address, redemptionAmount, 'refill');
+  }
+
+  // Call processRedemption from oracle account
+  await oracleContract.connect(oracle).processRedemption(merchant.address, redemptionAmount, this.pixKey);
+
+  // Query the event PixPaymentProcessed from the oracle contract
+  const filter = oracleContract.filters.PixPaymentProcessed(merchant.address);
+  const events = await oracleContract.queryFilter(filter);
+  expect(events.length).to.be.greaterThan(0);
+  const event = events[0];
+  const expectedAmount = ethers.utils.parseUnits(redemptionAmount.toString(), decimals);
+  expect(event.args.recipient).to.equal(merchant.address);
+  expect(event.args.amount.toString()).to.equal(expectedAmount.toString());
+  expect(event.args.pixKey).to.equal(this.pixKey);
 });
