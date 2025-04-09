@@ -1,5 +1,8 @@
 # nrisimhadeva
 
+npm install --save-dev @cucumber/cucumber --registry https://registry.npmjs.org/
+
+
 O Protocolo NRISIMHADEVA é uma solução descentralizada open-source que conecta o sistema financeiro tradicional (PIX) ao mundo blockchain, permitindo a conversão bidirecional entre moeda fiduciária (BRL) e tokens digitais sem necessidade de banco de dados centralizado.
 
 ## Índice

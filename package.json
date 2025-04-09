@@ -1,0 +1,30 @@
+{
+  "name": "nrisimhadeva",
+  "version": "1.0.0",
+  "description": "O Protocolo NRISIMHADEVA é uma solução descentralizada open-source que conecta o sistema financeiro tradicional (PIX) ao mundo blockchain, permitindo a conversão bidirecional entre moeda fiduciária (BRL) e tokens digitais sem necessidade de banco de dados centralizado.",
+  "main": "src/frontend/index.js",
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/govinda777/nrisimhadeva.git"
+  },
+  "keywords": [
+    "blockchain",
+    "PIX",
+    "tokens",
+    "descentralizado",
+    "smart",
+    "contracts"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/govinda777/nrisimhadeva/issues"
+  },
+  "homepage": "https://github.com/govinda777/nrisimhadeva#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0"
+  }
+}
