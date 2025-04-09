@@ -6,11 +6,23 @@ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs
 npm audit fix --force --registry https://registry.npmjs.org/
 npm install ganache --registry https://registry.npmjs.org/
 npm install ethereum-waffle@latest --registry https://registry.npmjs.org/
-
 npm install hardhat@latest --registry https://registry.npmjs.org/
 npm install ethereum-waffle@4.0.10 --registry https://registry.npmjs.org/
 
+npm install --save-dev @nomiclabs/hardhat-etherscan --registry https://registry.npmjs.org/
+
+npm uninstall @nomiclabs/hardhat-etherscan --registry https://registry.npmjs.org/
+npm install --save-dev @nomicfoundation/hardhat-verify --registry https://registry.npmjs.org/
+
+npm install --save-dev dotenv @nomiclabs/hardhat-ethers @nomicfoundation/hardhat-verify --registry https://registry.npmjs.org/
+
+
 rm -rf node_modules package-lock.json
+
+---
+
+npx hardhat run scripts/deploy.js --network polygon_amoy
+
 
 Este diretório contém toda a lógica e os componentes relacionados à camada blockchain do protocolo descentralizado. Aqui você encontrará os smart contracts, scripts de migração, testes e scripts de deploy que compõem a base dos serviços blockchain da aplicação.
 
