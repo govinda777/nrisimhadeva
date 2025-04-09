@@ -6,29 +6,18 @@ let token;
 let owner, A, B, spender, C;
 
 Before(async function () {
-    // Deploy the NrisimhadevaToken contract before each scenario
     const Token = await ethers.getContractFactory("NrisimhadevaToken");
     token = await Token.deploy();
     await token.deployed();
     const signers = await ethers.getSigners();
-    owner = signers[0];
-    A = signers[1];
-    B = signers[2];
-    spender = signers[3];
-    C = signers[4];
+    [owner, A, B, spender, C] = signers.slice(0,5);
 });
 
-// Background: Blockchain connection
-Given('que a rede blockchain esteja ativa e conectada', async function () {
-    // Assume the blockchain network is active and connected
-});
+Given('que a rede blockchain esteja ativa e conectada', async function () {});
 
-Given('que o contrato NrisimhadevaToken tenha sido implantado na rede', async function () {
-    // The contract deployment is handled in the Before hook
-});
+Given('que o contrato NrisimhadevaToken tenha sido implantado na rede', async function () {});
 
 Given('que o contrato foi inicializado com um total de {int} tokens', async function (initialTokens) {
-    // Verifica o supply inicial do construtor (SEM criar novos tokens)
     const totalSupply = await token.totalSupply();
     const expectedSupply = ethers.utils.parseUnits(initialTokens.toString(), await token.decimals());
     expect(totalSupply.toString()).to.equal(expectedSupply.toString());
@@ -39,72 +28,64 @@ When('consulto o total de tokens do contrato', async function () {
 });
 
 Then('o valor retornado deve ser {int} tokens', async function (expectedTokens) {
-    const decimals = await token.decimals();
-    const expectedSupply = ethers.utils.parseUnits(expectedTokens.toString(), decimals);
+    const expectedSupply = ethers.utils.parseUnits(expectedTokens.toString(), await token.decimals());
     expect(this.totalSupply.toString()).to.equal(expectedSupply.toString());
 });
 
 Given('que a conta "A" possua {int} tokens', async function (amount) {
     await token.addOracle(owner.address);
-    // Passar valor BRUTO (sem parseUnits)
-    await token.issueTokens(A.address, amount, "Assign tokens to A");
+    const tokens = ethers.utils.parseUnits(amount.toString(), await token.decimals());
+    await token.issueTokens(A.address, amount, "tx1");
 });
 
 When('a conta "A" transferir {int} tokens para a conta "B"', async function (transferAmount) {
-    const decimals = await token.decimals();
     const tokenForA = token.connect(A);
-    await tokenForA.transfer(B.address, ethers.utils.parseUnits(transferAmount.toString(), decimals));
+    const amount = ethers.utils.parseUnits(transferAmount.toString(), await token.decimals());
+    await tokenForA.transfer(B.address, amount);
 });
 
 Then('o saldo da conta "A" deverá ser {int} tokens', async function (expectedBalance) {
-    const decimals = await token.decimals();
     const balance = await token.balanceOf(A.address);
-    const expected = ethers.utils.parseUnits(expectedBalance.toString(), decimals);
+    const expected = ethers.utils.parseUnits(expectedBalance.toString(), await token.decimals());
     expect(balance.toString()).to.equal(expected.toString());
 });
 
 Then('o saldo da conta "B" deverá ser {int} tokens', async function (expectedBalance) {
-    const decimals = await token.decimals();
     const balance = await token.balanceOf(B.address);
-    const expected = ethers.utils.parseUnits(expectedBalance.toString(), decimals);
+    const expected = ethers.utils.parseUnits(expectedBalance.toString(), await token.decimals());
     expect(balance.toString()).to.equal(expected.toString());
 });
 
-// Scenario: Aprovação e transferência delegada de tokens
 Given('que a conta "owner" possua {int} tokens', async function (amount) {
-    const decimals = await token.decimals();
-    const totalAmount = ethers.utils.parseUnits(amount.toString(), decimals);
     await token.addOracle(owner.address);
-    await token.issueTokens(owner.address, totalAmount, "Assign tokens to owner");
-    this.ownerInitialBalance = totalAmount;
+    await token.issueTokens(owner.address, amount, "tx2");
+    this.ownerInitialBalance = await token.balanceOf(owner.address);
 });
 
 When('a conta "owner" aprovar a conta "spender" para gastar {int} tokens', async function (approveAmount) {
-    const decimals = await token.decimals();
-    await token.approve(spender.address, ethers.utils.parseUnits(approveAmount.toString(), decimals));
+    const amount = ethers.utils.parseUnits(approveAmount.toString(), await token.decimals());
+    await token.approve(spender.address, amount);
 });
 
 When('a conta "spender" executar uma transferência de {int} tokens da conta "owner" para a conta "C" utilizando a função transferFrom', async function (transferAmount) {
-    const decimals = await token.decimals();
     const tokenForSpender = token.connect(spender);
-    await tokenForSpender.transferFrom(owner.address, C.address, ethers.utils.parseUnits(transferAmount.toString(), decimals));
+    const amount = ethers.utils.parseUnits(transferAmount.toString(), await token.decimals());
+    await tokenForSpender.transferFrom(owner.address, C.address, amount);
 });
 
 Then('o saldo da conta "owner" deverá ser reduzido em {int} tokens', async function (reducedAmount) {
-    const decimals = await token.decimals();
-    const expectedBalance = this.ownerInitialBalance.sub(ethers.utils.parseUnits(reducedAmount.toString(), decimals));
-    const actualBalance = await token.balanceOf(owner.address);
-    expect(actualBalance.toString()).to.equal(expectedBalance.toString());
+    const currentBalance = await token.balanceOf(owner.address);
+    const expectedReduction = ethers.utils.parseUnits(reducedAmount.toString(), await token.decimals());
+    expect(currentBalance.toString()).to.equal(this.ownerInitialBalance.sub(expectedReduction).toString());
 });
 
 Then('o saldo da conta "C" deverá ser aumentado em {int} tokens', async function (increasedAmount) {
-    const decimals = await token.decimals();
     const balanceC = await token.balanceOf(C.address);
-    const expectedBalanceC = ethers.utils.parseUnits(increasedAmount.toString(), decimals);
-    expect(balanceC.toString()).to.equal(expectedBalanceC.toString());
+    const expected = ethers.utils.parseUnits(increasedAmount.toString(), await token.decimals());
+    expect(balanceC.toString()).to.equal(expected.toString());
 });
 
 Then('a permissão da conta "spender" deverá ser zerada pós-transferência', async function () {
-    const allowanceSpender = await token.allowance(owner.address, spender.address);
-    expect(allowanceSpender.toString()).to.equal("0");
+    const allowance = await token.allowance(owner.address, spender.address);
+    expect(allowance.toString()).to.equal("0");
 });

@@ -10,7 +10,7 @@
     "start-local": "npx hardhat node", 
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
-    "bdd": "npm-run-all --parallel start-local bdd-run",
+    "bdd": "npm-run-all build --parallel start-local bdd-run",
     "bdd-run": "npx cucumber-js contracts/NrisimhadevaToken.feature",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost"
   },

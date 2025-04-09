@@ -4,6 +4,7 @@ Funcionalidade: Teste do Contrato NrisimhadevaToken
 Antecedentes:
   Dado que a rede blockchain esteja ativa e conectada
   E que o contrato NrisimhadevaToken tenha sido implantado na rede
+  E que o contrato foi inicializado com um total de 1000000 tokens
 
 Cenário: Verificar o total de tokens iniciais
   Quando consulto o total de tokens do contrato
