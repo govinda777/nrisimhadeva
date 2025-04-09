@@ -23,14 +23,14 @@ npm install @openzeppelin/contracts --registry https://registry.npmjs.org/
 npm install -g npm-run-all --registry https://registry.npmjs.org/
 
 
-rm -rf node_modules package-lock.json
+
 
 ---
 
 npx hardhat run scripts/deploy.js --network polygon_amoy
 
 
-Este diretório contém toda a lógica e os componentes relacionados à camada blockchain do protocolo descentralizado. Aqui você encontrará os smart contracts, scripts de migração, testes e scripts de deploy que compõem a base dos serviços blockchain da aplicação.
+Este diretório agrupa toda a lógica e os componentes que compõem a camada blockchain do protocolo descentralizado. Nele, encontram-se os smart contracts, scripts de migração, testes e deploy, os quais formam a base dos serviços blockchain da aplicação.
 
 ## Estrutura do Diretório
 
@@ -64,7 +64,7 @@ Este diretório contém toda a lógica e os componentes relacionados à camada b
    Certifique-se de que você tem o [Node.js](https://nodejs.org/) e o [npm](https://www.npmjs.com/) instalados. Em seguida, instale as dependências do projeto com:
 
    ```
-   npm install
+   npm install --registry https://registry.npmjs.org/
    ```
 
 2. **Variáveis de Ambiente:**
@@ -100,15 +100,25 @@ Este diretório contém toda a lógica e os componentes relacionados à camada b
    Para rodar os testes:
 
    ```
-   npm test
-   ```
-   ou diretamente com Mocha:
-
-   ```
-   npx mocha
+   npm run bdd
    ```
 
    Os testes cobrem cenários unitários (arquivos dentro de `tests`) e de comportamento utilizando Cucumber.js (arquivos `.feature` e `.steps.js`).
+
+## Comandos Úteis
+
+- **Clean:**
+  ```
+  rm -rf node_modules package-lock.json
+  ```
+
+- **Auditoria e Correção de Vulnerabilidades:**
+  ```
+  npm audit fix --force --registry https://registry.npmjs.org/
+  ```
+
+- **Inicialização da Rede Local:**
+  Utilize ferramentas como Ganache ou Hardhat Network.
 
 ## Boas Práticas e Contribuições
 
