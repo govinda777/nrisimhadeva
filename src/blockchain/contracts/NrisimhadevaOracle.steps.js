@@ -30,6 +30,25 @@ Before(async function () {
   await oracleContract.grantRole(await oracleContract.ORACLE_ROLE(), oracle.address);
 });
 
+// Adicione estes novos steps
+Given('o campo {string} contém o endereço {string}',
+  async function (campo, endereco) {
+    this.recipientAddress = endereco;
+  });
+
+Then('o evento {string} deve ser emitido',
+  async function (eventName) {
+    const eventFilter = oracleContract.filters[eventName]();
+    const events = await oracleContract.queryFilter(eventFilter);
+    expect(events.length).to.be.greaterThan(0);
+  });
+
+// Atualize o step existente para usar parâmetro numérico
+Given('que um pagamento PIX de R${int} foi recebido',
+  async function (amount) {
+    this.amount = amount;
+  });
+
 Given('que um pagamento PIX de R${int} foi recebido para a chave {string}',
   async function (amount, pixKey) {
     // Simula recebimento via backend externo
@@ -61,9 +80,14 @@ Then('o evento {string} deve ser emitido com os detalhes corretos',
     expect(events.length).to.be.greaterThan(0);
   });
 
-// Steps para resgate de tokens
+// Modifique o step de saldo para usar endereços válidos
 Given('que o endereço {string} possui {int} tokens',
   async function (address, amount) {
+    // Validação de endereço Ethereum
+    if (!ethers.utils.isAddress(address)) {
+      throw new Error(`Endereço inválido: ${address}`);
+    }
+
     await tokenContract.issueTokens(
       address,
       ethers.utils.parseUnits(String(amount), 18),

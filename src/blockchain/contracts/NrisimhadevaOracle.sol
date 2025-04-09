@@ -69,14 +69,11 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         uint256 _amount,
         string calldata _pixTransactionId
     ) external onlyRole(ORACLE_ROLE) {
+        require(_recipient != address(0), "Endereco invalido");
         require(_amount > 0, "Valor invalido");
+        require(bytes(_pixTransactionId).length > 0, "ID transacao invalido");
         
-        // Emissão de tokens para o destinatário
-        tokenContract.issueTokens(
-            _recipient,
-            _amount,
-            _pixTransactionId
-        );
+        tokenContract.issueTokens(_recipient, _amount, _pixTransactionId);
         
         emit PixPaymentDetected(_recipient, _amount, _pixTransactionId);
     }
@@ -92,6 +89,10 @@ contract NrisimhadevaOracle is ChainlinkClient, AccessControl {
         uint256 _amount,
         string memory _pixKey
     ) external onlyRole(ORACLE_ROLE) {
+        require(_sender != address(0), "Remetente invalido");
+        require(_amount > 0, "Valor invalido");
+        require(bytes(_pixKey).length > 0, "Chave PIX invalida");
+
         // Construção da requisição para o oracle Chainlink
         Chainlink.Request memory req = _buildChainlinkRequest(
             jobId,
