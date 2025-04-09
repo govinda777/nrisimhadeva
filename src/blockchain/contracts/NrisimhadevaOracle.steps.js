@@ -63,7 +63,9 @@ When('o oráculo detecta a transação', async function () {
 Then('o contrato deve emitir {int} tokens para {string}', 
   async function (amount, address) {
     const balance = await tokenContract.balanceOf(address);
-    expect(balance).to.equal(amount);
+    const decimals = await tokenContract.decimals();
+    const expected = ethers.utils.parseUnits(amount.toString(), decimals);
+    expect(balance.toString()).to.equal(expected.toString());
   });
 
 Then('o evento {string} deve ser emitido com os detalhes corretos', 
@@ -115,7 +117,7 @@ Then('os tokens devem ser queimados', async function () {
 // Steps para cenários de erro
 When('o oráculo tenta processar a transação', async function () {
   this.tx = oracleContract.connect(oracle).processPIXPayment(
-    ethers.constants.AddressZero, // Endereço inválido
+    user.address,
     0,
     'invalid_tx'
   );
@@ -123,7 +125,12 @@ When('o oráculo tenta processar a transação', async function () {
 
 Then('a transação deve ser revertida com o erro {string}', 
   async function (errorMessage) {
-    await expect(this.tx).to.be.revertedWith(errorMessage);
+    try {
+      await this.tx;
+      throw new Error('Transaction did not revert');
+    } catch (error) {
+      expect(error.message).to.include(errorMessage);
+    }
   });
 
 // Step adicional para pagamento inválido

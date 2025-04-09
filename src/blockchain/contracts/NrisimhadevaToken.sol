@@ -26,16 +26,18 @@ contract NrisimhadevaToken is ERC20, AccessControl {
     }
     
     function issueTokens(address to, uint256 amount, string calldata transactionId) external onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
-        emit TokensIssued(to, amount, transactionId);
+        uint256 scaledAmount = amount * 10 ** uint256(decimals());
+        _mint(to, scaledAmount);
+        emit TokensIssued(to, scaledAmount, transactionId);
     }
     
     function redeemTokens(uint256 amount) external {
-        require(balanceOf(msg.sender) >= amount, "Saldo insuficiente");
+        uint256 scaledAmount = amount * 10 ** uint256(decimals());
+        require(balanceOf(msg.sender) >= scaledAmount, "Saldo insuficiente");
         require(bytes(pixKeys[msg.sender]).length > 0, "No PIX key registered");
         
-        _burn(msg.sender, amount);
-        emit TokensRedeemed(msg.sender, amount, pixKeys[msg.sender]);
+        _burn(msg.sender, scaledAmount);
+        emit TokensRedeemed(msg.sender, scaledAmount, pixKeys[msg.sender]);
     }
     
     function addOracle(address oracle) external onlyRole(ADMIN_ROLE) {
