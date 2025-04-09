@@ -15,8 +15,8 @@ contract NrisimhadevaToken is ERC20, AccessControl {
     event TokensRedeemed(address indexed from, uint256 amount, string pixKey);
     
     constructor() ERC20("Nrisimhadeva Token", "NVD") {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(ADMIN_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(ADMIN_ROLE, msg.sender);
     }
     
     // Register PIX key for this wallet
