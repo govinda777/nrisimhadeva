@@ -38,8 +38,8 @@
       ]
     },
     "/Users/gosouza/projetos-p/nrisimhadeva/src/blockchain/contracts/NrisimhadevaToken.sol": {
-      "lastModificationDate": 1744194445449,
-      "contentHash": "7fafd11c7c9bd6c3cc65d01bf0f395bc",
+      "lastModificationDate": 1744200571635,
+      "contentHash": "0d3ff22afe00363907c2c9889f2f7c7d",
       "sourceName": "contracts/NrisimhadevaToken.sol",
       "solcConfig": {
         "version": "0.8.20",
