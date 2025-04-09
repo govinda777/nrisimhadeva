@@ -1,35 +1,5 @@
 # Blockchain Layer
 
-npm install --registry https://registry.npmjs.org/
-npm audit fix --force --registry https://registry.npmjs.org/
-
-npm install --save-dev hardhat --registry https://registry.npmjs.org/
-npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers dotenv --registry https://registry.npmjs.org/
-
-npm install ganache --registry https://registry.npmjs.org/
-npm install ethereum-waffle@latest --registry https://registry.npmjs.org/
-npm install hardhat@latest --registry https://registry.npmjs.org/
-npm install ethereum-waffle@4.0.10 --registry https://registry.npmjs.org/
-
-npm install --save-dev @nomiclabs/hardhat-etherscan --registry https://registry.npmjs.org/
-
-npm uninstall @nomiclabs/hardhat-etherscan --registry https://registry.npmjs.org/
-npm install --save-dev @nomicfoundation/hardhat-verify --registry https://registry.npmjs.org/
-
-npm install --save-dev dotenv @nomiclabs/hardhat-ethers @nomicfoundation/hardhat-verify --registry https://registry.npmjs.org/
-
-npm install @openzeppelin/contracts --registry https://registry.npmjs.org/
-
-npm install -g npm-run-all --registry https://registry.npmjs.org/
-
-
-
-
----
-
-npx hardhat run scripts/deploy.js --network polygon_amoy
-
-
 Este diretório agrupa toda a lógica e os componentes que compõem a camada blockchain do protocolo descentralizado. Nele, encontram-se os smart contracts, scripts de migração, testes e deploy, os quais formam a base dos serviços blockchain da aplicação.
 
 ## Estrutura do Diretório
@@ -38,7 +8,6 @@ Este diretório agrupa toda a lógica e os componentes que compõem a camada blo
 | -------------- | ----------------------------------------------------------------------------------------------------------------- |
 | **contracts**  | Contém os smart contracts escritos em Solidity (por exemplo, `NrisimhadevaToken.sol` e `NrisimhadevaOracle.sol`).      |
 | **migrations** | Scripts e arquivos de configuração para migrar e implantar os smart contracts (ex.: `1_deploy_contracts.js`).         |
-| **tests**      | Testes unitários e de integração dos contratos, garantindo a funcionalidade correta (ex.: `token.test.js`, `oracle.test.js`). |
 | **scripts**    | Scripts auxiliares que automatizam o processo de deploy dos contratos (por exemplo, `deploy.js`).                   |
 
 ## Tecnologias e Ferramentas

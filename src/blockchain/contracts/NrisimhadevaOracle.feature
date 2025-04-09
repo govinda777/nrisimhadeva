@@ -1,24 +1,32 @@
 # language: pt
-Funcionalidade: Consulta e Atualização de Dados no Oracle Nrisimhadeva
+# src/blockchain/contracts/NrisimhadevaOracle.feature
 
-Antecedentes:
-  Dado que a rede blockchain esteja ativa e conectada
-  E que o contrato NrisimhadevaOracle tenha sido implantado na rede
-  E que o Oracle esteja configurado com dados iniciais precisos
+Funcionalidade: Oráculo NRISIMHADEVA
+  Como operador do protocolo
+  Quero que o oráculo integre pagamentos PIX com a blockchain
+  Para permitir conversão automática entre BRL e tokens
 
-Cenário: Consulta do valor de um ativo
-  Quando o usuário consultar o valor do ativo "BTC" através do Oracle
-  Então o Oracle deverá retornar o preço atual do "BTC"
-  E o valor retornado deverá ser um número maior que zero
+  Cenário: Detecção de pagamento PIX bem-sucedido
+    Dado que um pagamento PIX de R$100 foi recebido para a chave "123-456"
+    E o campo 'solicitacaoPagador' contém o endereço "0xUser123"
+    Quando o oráculo detecta a transação
+    Então o contrato deve emitir 100 tokens para "0xUser123"
+    E o evento "TokensIssued" deve ser emitido com os detalhes corretos
 
-Cenário: Atualização dos dados do Oracle
-  Dado que novos dados de mercado estejam disponíveis
-  Quando o sistema executar a atualização do Oracle
-  Então o Oracle deverá registrar os novos preços dos ativos
-  E a atualização deve ser confirmada por uma transação na blockchain
+  Cenário: Resgate de tokens via PIX
+    Dado que o endereço "0xMerchant456" possui 500 tokens
+    E possui uma chave PIX "merchant@bank.com" registrada
+    Quando o lojista inicia um resgate de 500 tokens
+    Então o oráculo deve iniciar uma transferência PIX de R$500 para "merchant@bank.com"
+    E os tokens devem ser queimados
+    E o evento "TokensRedeemed" deve ser emitido
 
-Cenário: Resposta em caso de falha na fonte de dados
-  Dado que a fonte de dados do Oracle esteja indisponível
-  Quando o usuário tentar consultar o preço de um ativo
-  Então o Oracle deverá retornar uma mensagem de erro
-  E nenhum valor inválido deverá ser exibido
+  Cenário: Detecção de pagamento PIX inválido
+    Dado que um pagamento PIX de R$0 foi recebido
+    Quando o oráculo tenta processar a transação
+    Então a transação deve ser revertida com o erro "Valor inválido"
+
+  Cenário: Resgate com saldo insuficiente
+    Dado que o endereço "0xUser789" possui 50 tokens
+    Quando tenta resgatar 100 tokens
+    Então a transação deve ser revertida com o erro "Saldo insuficiente"

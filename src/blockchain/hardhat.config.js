@@ -37,7 +37,6 @@ module.exports = {
   },
   paths: {
     sources: "./contracts", // Caminho para os contratos Solidity
-    tests: "./tests",       // Caminho para os testes
     cache: "./cache",       // Caminho para o cache
     artifacts: "./artifacts" // Caminho para os artefatos compilados
   }

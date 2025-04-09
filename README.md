@@ -193,62 +193,6 @@ flowchart TD;
 - **Frontend**: React.js
 - **API Gateway**: Node.js
 
-## Smart Contracts
-
-O protocolo utiliza dois contratos principais:
-
-### NrisimhadevaToken.sol
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-
-contract NrisimhadevaToken is ERC20, AccessControl {
-    bytes32 public constant ORACLE_ROLE = keccak256("ORACLE_ROLE");
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    
-    // Mapping to store PIX keys for redemption
-    mapping(address => string) public pixKeys;
-    
-    event TokensIssued(address indexed to, uint256 amount, string transactionId);
-    event TokensRedeemed(address indexed from, uint256 amount, string pixKey);
-    
-    constructor() ERC20("Nrisimhadeva Token", "NVD") {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(ADMIN_ROLE, msg.sender);
-    }
-    
-    // Register PIX key for a wallet
-    function registerPixKey(string calldata pixKey) external {
-        pixKeys[msg.sender] = pixKey;
-    }
-    
-    // Issue tokens after PIX payment confirmation
-    function issueTokens(address to, uint256 amount, string calldata transactionId) 
-        external onlyRole(ORACLE_ROLE) {
-        _mint(to, amount * 10 ** decimals());
-        emit TokensIssued(to, amount, transactionId);
-    }
-    
-    // Redeem tokens for PIX payment
-    function redeemTokens(uint256 amount) external {
-        require(balanceOf(msg.sender) >= amount * 10 ** decimals(), "Insufficient balance");
-        require(bytes(pixKeys[msg.sender]).length > 0, "No PIX key registered");
-        
-        _burn(msg.sender, amount * 10 ** decimals());
-        emit TokensRedeemed(msg.sender, amount, pixKeys[msg.sender]);
-    }
-    
-    // Admin can add oracle addresses
-    function addOracle(address oracle) external onlyRole(ADMIN_ROLE) {
-        grantRole(ORACLE_ROLE, oracle);
-    }
-}
-```
-
 ## Oráculos
 
 O protocolo utiliza oráculos Chainlink para:
@@ -263,79 +207,6 @@ O protocolo utiliza oráculos Chainlink para:
    - Iniciar transferências PIX para os lojistas
    - Confirmar a conclusão da transferência
 
-
-### NrisimhadevaOracle.sol
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
-import "./NrisimhadevaToken.sol";
-
-contract NrisimhadevaOracle is ChainlinkClient {
-    using Chainlink for Chainlink.Request;
-    
-    address private tokenContract;
-    address private owner;
-    
-    bytes32 private jobId;
-    uint256 private fee;
-    
-    event PixPaymentProcessed(address indexed recipient, uint256 amount, string pixKey);
-    
-    constructor(address _tokenContract, address _link) {
-        tokenContract = _tokenContract;
-        owner = msg.sender;
-        setChainlinkToken(_link);
-        jobId = "your_job_id";
-        fee = 0.1 * 10 ** 18; // 0.1 LINK
-    }
-    
-    // Called by Chainlink node when PIX payment is detected
-    function fulfillPixPayment(bytes32 _requestId, address _recipient, uint256 _amount, string memory _txId) 
-        public recordChainlinkFulfillment(_requestId) {
-        NrisimhadevaToken(tokenContract).issueTokens(_recipient, _amount, _txId);
-    }
-    
-    // Called when tokens are redeemed for PIX payment
-    function processRedemption(address _sender, uint256 _amount, string memory _pixKey) external {
-        require(msg.sender == tokenContract, "Only token contract can call");
-        
-        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillRedemption.selector);
-        req.add("recipient", _pixKey);
-        req.addUint("amount", _amount);
-        req.add("sender", addressToString(_sender));
-        
-        sendChainlinkRequestTo(oracle, req, fee);
-        
-        emit PixPaymentProcessed(_sender, _amount, _pixKey);
-    }
-    
-    // Callback for redemption confirmation
-    function fulfillRedemption(bytes32 _requestId, bool _success) public recordChainlinkFulfillment(_requestId) {
-        // Additional logic if needed
-    }
-    
-    // Helper function to convert address to string
-    function addressToString(address _addr) internal pure returns(string memory) {
-        bytes32 value = bytes32(uint256(uint160(_addr)));
-        bytes memory alphabet = "0123456789abcdef";
-        
-        bytes memory str = new bytes(42);
-        str[0] = '0';
-        str[1] = 'x';
-        
-        for (uint256 i = 0; i < 20; i++) {
-            str[2+i*2] = alphabet[uint8(value[i + 12] >> 4)];
-            str[3+i*2] = alphabet[uint8(value[i + 12] & 0x0f)];
-        }
-        
-        return string(str);
-    }
-}
-```
-
 ## Instalação
 
 ### Pré-requisitos
@@ -349,13 +220,13 @@ contract NrisimhadevaOracle is ChainlinkClient {
 
 1. **Clone o repositório**
    ```bash
-   git clone https://github.com/nrisimhadeva/protocol.git
-   cd protocol
+   git clone https://github.com/govinda777/nrisimhadeva.git
+   cd nrisimhadeva
    ```
 
 2. **Instale as dependências**
    ```bash
-   yarn install
+   npm install --registry https://registry.npmjs.org/
    ```
 
 3. **Configure as variáveis de ambiente**
@@ -366,17 +237,17 @@ contract NrisimhadevaOracle is ChainlinkClient {
 
 4. **Compile os smart contracts**
    ```bash
-   yarn compile
+   npx hardhat compile
    ```
 
 5. **Deploy dos contratos**
    ```bash
-   yarn deploy:network
+   npx hardhat deploy:network
    ```
 
 6. **Inicie o frontend**
    ```bash
-   yarn start
+   npm start
    ```
 
 ## Contribuição
