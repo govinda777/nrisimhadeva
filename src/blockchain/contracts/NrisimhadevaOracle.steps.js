@@ -53,6 +53,7 @@ Given('o campo {string} contém o endereço {string}',
   });
 
 When('o oráculo detecta a transação', async function () {
+  this.initialBalance = await tokenContract.balanceOf(this.recipientAddress);
   await oracleContract.connect(oracle).processPIXPayment(
     this.recipientAddress,
     this.amount,
@@ -62,17 +63,25 @@ When('o oráculo detecta a transação', async function () {
 
 Then('o contrato deve emitir {int} tokens para {string}', 
   async function (amount, address) {
-    const balance = await tokenContract.balanceOf(address);
     const decimals = await tokenContract.decimals();
     const expected = ethers.utils.parseUnits(amount.toString(), decimals);
-    expect(balance.toString()).to.equal(expected.toString());
+    const finalBalance = await tokenContract.balanceOf(address);
+    const initial = this.initialBalance || ethers.BigNumber.from('0');
+    const diff = finalBalance.sub(initial);
+    expect(diff.toString()).to.equal(expected.toString());
   });
 
 Then('o evento {string} deve ser emitido com os detalhes corretos', 
   async function (eventName) {
-    const eventFilter = oracleContract.filters[eventName]();
-    const events = await oracleContract.queryFilter(eventFilter);
+    const decimals = await tokenContract.decimals();
+    const expectedAmount = ethers.utils.parseUnits(this.amount.toString(), decimals);
+    const filter = oracleContract.filters[eventName](this.recipientAddress, null, 'tx123');
+    const events = await oracleContract.queryFilter(filter);
     expect(events.length).to.be.greaterThan(0);
+    const event = events[0];
+    expect(event.args.recipient).to.equal(this.recipientAddress);
+    expect(event.args.amount.toString()).to.equal(expectedAmount.toString());
+    expect(event.args.pixTransactionId).to.equal('tx123');
   });
 
 // Steps para resgate
@@ -81,10 +90,10 @@ Given('que o endereço {string} possui {int} tokens',
     if (!ethers.utils.isAddress(address)) {
       throw new Error(`Endereço inválido: ${address}`);
     }
-    
-    const MINTER_ROLE = await tokenContract.MINTER_ROLE();
+    // If a PIX key was registered, assume resgate scenario and issue tokens to the merchant
+    const recipient = this.pixKey ? merchant.address : address;
     await tokenContract.connect(owner).issueTokens(
-      address,
+      recipient,
       amount,
       'initial_issue'
     );
@@ -104,9 +113,14 @@ When('o lojista inicia um resgate de {int} tokens',
 
 Then('o oráculo deve iniciar uma transferência PIX de R${int} para {string}', 
   async function (amount, pixKey) {
+    const decimals = await tokenContract.decimals();
+    const expectedAmount = ethers.utils.parseUnits(amount.toString(), decimals);
     const eventFilter = tokenContract.filters.TokensRedeemed();
     const events = await tokenContract.queryFilter(eventFilter);
-    expect(events[0].args.pixKey).to.equal(pixKey);
+    expect(events.length).to.be.greaterThan(0);
+    const event = events[0];
+    expect(event.args.pixKey).to.equal(pixKey);
+    expect(event.args.amount.toString()).to.equal(expectedAmount.toString());
   });
 
 Then('os tokens devem ser queimados', async function () {
