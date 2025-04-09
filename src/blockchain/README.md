@@ -16,6 +16,8 @@ npm install --save-dev @nomicfoundation/hardhat-verify --registry https://regist
 
 npm install --save-dev dotenv @nomiclabs/hardhat-ethers @nomicfoundation/hardhat-verify --registry https://registry.npmjs.org/
 
+npm install @openzeppelin/contracts --registry https://registry.npmjs.org/
+
 
 rm -rf node_modules package-lock.json
 
