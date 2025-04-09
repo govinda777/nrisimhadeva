@@ -2,9 +2,12 @@
     "name": "nrisimhadeva-oracle-jobs",
     "version": "1.0.0",
     "description": "Jobs for integrating Oracle for processing PIX payments and redemptions in the NRISIMHADEVA protocol",
-    "main": "src/jobs/job-orchestrator.js",
+    "main": "job-orchestrator.js",
     "scripts": {
-      "start": "node src/jobs/job-orchestrator.js"
+      "start": "node job-orchestrator.js",
+      "bdd": "npm-run-all build --parallel start-local bdd-run",
+      "bdd-run": "npx cucumber-js \"**/*.feature\" && npm run stop-local",
+      "stop-local": "kill-port 8545"
     },
     "dependencies": {
       "axios": "^0.27.2",
@@ -12,6 +15,13 @@
       "ethers": "^5.7.2",
       "uuid": "^9.0.0",
       "cbor": "^8.0.0",
-      "dotenv": "^16.0.0"
+      "dotenv": "^16.0.0",
+      "npm-run-all": "^4.1.5",
+      "kill-port": "^2.0.1"
+    },
+    "devDependencies": {
+      "chai": "^4.3.7",
+      "dotenv": "^16.4.7",
+      "ethereum-waffle": "^4.0.10"
     }
   }

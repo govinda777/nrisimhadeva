@@ -12,8 +12,8 @@
     "test": "npx hardhat test",
     "bdd": "npm-run-all build --parallel start-local bdd-run",
     "bdd-run": "npx cucumber-js \"**/*.feature\" && npm run stop-local",
-    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
-    "stop-local": "kill-port 8545"
+    "stop-local": "kill-port 8545",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost"
   },
   "keywords": [],
   "author": "",

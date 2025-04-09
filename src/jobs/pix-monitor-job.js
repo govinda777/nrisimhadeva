@@ -17,18 +17,18 @@ const oracleContract = new ethers.Contract(
 );
 
 async function runPixMonitorJob() {
-    console.log(`[${new Date().toISOString()}] Running PIX monitor job...`);
+    console.log(`[${new Date().toISOString()}] Running PIX monitor job (Mercado Pago API)...`);
     try {
         // Consulta as transações na API do PIX.
-        const response = await axios.get(`${process.env.PIX_API_URL}/transactions`, {
-            headers: { Authorization: `Bearer ${process.env.PIX_API_AUTH}` }
+        const response = await axios.get(`${process.env.MP_PIX_API_URL}/transactions`, {
+            headers: { Authorization: `Bearer ${process.env.MP_PIX_API_AUTH}` }
         });
         const transactions = response.data; // Assume um array de objetos de transação.
-        console.log(`Fetched ${transactions.length} transactions from PIX API.`);
+        console.log(`Fetched ${transactions.length} transactions from Mercado Pago PIX API.`);
         
         // Para cada transação concluída e ainda não processada...
         for (const tx of transactions) {
-            if (tx.status === 'completed' && !tx.processed) {
+            if (tx.status === 'approved' && !tx.processed) {
                 const uniqueId = uuidv4();
                 console.log(`Processing transaction ${tx.id} with unique ID ${uniqueId}`);
                 // Chama a função do contrato processPIXPayment.
@@ -42,10 +42,10 @@ async function runPixMonitorJob() {
                 await txn.wait();
                 console.log(`Blockchain transaction confirmed for tx id ${tx.id}`);
                 // Marca a transação como processada na API do PIX.
-                await axios.post(`${process.env.PIX_API_URL}/markProcessed`, { transactionId: tx.id }, {
-                    headers: { Authorization: `Bearer ${process.env.PIX_API_AUTH}` }
+                await axios.post(`${process.env.MP_PIX_API_URL}/markProcessed`, { transactionId: tx.id }, {
+                    headers: { Authorization: `Bearer ${process.env.MP_PIX_API_AUTH}` }
                 });
-                console.log(`Marked transaction ${tx.id} as processed in PIX API.`);
+                console.log(`Marked transaction ${tx.id} as processed in Mercado Pago PIX API.`);
             }
         }
     } catch (error) {
