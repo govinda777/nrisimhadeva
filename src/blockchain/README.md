@@ -1,9 +1,11 @@
 # Blockchain Layer
 
 npm install --registry https://registry.npmjs.org/
+npm audit fix --force --registry https://registry.npmjs.org/
+
 npm install --save-dev hardhat --registry https://registry.npmjs.org/
 npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers dotenv --registry https://registry.npmjs.org/
-npm audit fix --force --registry https://registry.npmjs.org/
+
 npm install ganache --registry https://registry.npmjs.org/
 npm install ethereum-waffle@latest --registry https://registry.npmjs.org/
 npm install hardhat@latest --registry https://registry.npmjs.org/

@@ -7,12 +7,13 @@
     "test": "tests"
   },
   "scripts": {
-    "start-local": "npx hardhat node", 
+    "start-local": "npx hardhat node",
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
     "bdd": "npm-run-all build --parallel start-local bdd-run",
-    "bdd-run": "npx cucumber-js contracts/NrisimhadevaToken.feature",
-    "deploy": "npx hardhat run scripts/deploy.js --network localhost"
+    "bdd-run": "npx cucumber-js contracts/NrisimhadevaToken.feature && npm run stop-local",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "stop-local": "kill-port 8545"
   },
   "keywords": [],
   "author": "",
@@ -23,9 +24,10 @@
     "@nomiclabs/hardhat-waffle": "^2.0.6",
     "chai": "^4.3.7",
     "dotenv": "^16.4.7",
-    "ethereum-waffle": "^3.4.4",
+    "ethereum-waffle": "^4.0.10",
     "ethers": "^5.8.0",
     "hardhat": "^2.22.19",
+    "kill-port": "^2.0.1",
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {
