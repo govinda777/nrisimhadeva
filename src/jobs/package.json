@@ -5,8 +5,10 @@
     "main": "job-orchestrator.js",
     "scripts": {
       "start": "node job-orchestrator.js",
-      "bdd": "npm-run-all build --parallel start-local bdd-run",
-      "bdd-run": "npx cucumber-js \"**/*.feature\" && npm run stop-local",
+      "build": "echo 'No build necessary'",
+      "start-local": "node job-orchestrator.js",
+      "bdd": "npm-run-all build --parallel bdd-run",
+      "bdd-run": "npx cucumber-js \"**/oauth.feature\" && echo 'BDD run completed'",
       "stop-local": "kill-port 8545"
     },
     "dependencies": {

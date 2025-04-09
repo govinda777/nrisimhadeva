@@ -4,7 +4,8 @@
   "description": "O Protocolo NRISIMHADEVA é uma solução descentralizada open-source que conecta o sistema financeiro tradicional (PIX) ao mundo blockchain, permitindo a conversão bidirecional entre moeda fiduciária (BRL) e tokens digitais sem necessidade de banco de dados centralizado.",
   "main": "src/frontend/index.js",
   "scripts": {
-    "test": "cucumber-js"
+    "test": "cucumber-js",
+    "bdd-run": "npx cucumber-js --require src/jobs/oauth.steps.js \"**/oauth.feature\" && echo 'BDD run completed'"
   },
   "repository": {
     "type": "git",

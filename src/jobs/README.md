@@ -68,3 +68,34 @@ Este diagrama mostra que o orquestrador de jobs inicia os dois jobs. O job de mo
 ## Registro e Tratamento de Erros
 
 Cada script de job registra mensagens informativas e erros no console para facilitar o monitoramento e depuração. Verifique a saída do console para detalhes sobre a execução do job, transações blockchain e respostas da API.
+
+## OAuth
+
+```bash
+curl -X POST \
+    'https://api.mercadopago.com/oauth/token'\
+    -H 'Content-Type: application/json' \
+    -d '{
+  "client_secret": "AAAAA",
+  "client_id": "1111111",
+  "grant_type": "client_credentials",
+  "code": "TG-XXXXXXXX-241983636",
+  "code_verifier": "AAAAA",
+  "redirect_uri": "https://www.redirect-url.com?code=CODE&state=RANDOM_ID",
+  "refresh_token": "TG-XXXXXXXX-241983636",
+  "test_token": "false"
+}'
+```
+
+> Resposta:
+
+```json
+{
+   "access_token":"AAAAA",
+   "token_type":"Bearer",
+   "expires_in":21600,
+   "scope":"offline_access payments read write",
+   "user_id":111111,
+   "live_mode":true
+}
+```
